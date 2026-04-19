@@ -83,7 +83,7 @@
         "abbr_name": "wave",
         "full_name": "Wave",
         "tooltip": null,
-        "format": "[(prob<100){(prob)% chance to create}(prob==100){Creates}] a Lv.(lv) [(inverted){inverted }]wave attack[(pid){ with (_toString(pid)) IDs}][(hitless){, even if this attack misses}]",
+        "format": "[(prob<100){(prob)% chance to create}(prob==100){Creates}] a Lv.(lv)[(lv!=maxlv){~(maxlv)}] [(inverted){inverted }]wave attack[(pid){ with (_toString(pid)) IDs}][(hitless){, even if this attack misses}]",
         "class": {
             "prob": {
                 "name": "chance",
@@ -91,6 +91,10 @@
             },
             "lv": {
                 "name": "level",
+                "tooltip": null
+            },
+            "maxlv": {
+                "name": "max level",
                 "tooltip": null
             },
             "hitless": {
@@ -135,7 +139,10 @@
         "abbr_name": "Lethargy",
         "full_name": "Lethargy",
         "tooltip": null,
-        "format": "[(prob<100){(prob)% chance to }][(mult>0){Increase}(mult<0){Decrease}][(prob==100){s}] target's TBA by [(percentage){(_abs(mult))%}(!percentage){(_dispTimeD(mult))}] for (_dispTimeF(time))[(stackable){ (_left)Stackable(_right)}]",
+        "format": ["[(prob<100){(prob)% chance to }][((_strEqual(type,`SET))){Set}(!(_strEqual(type,`SET)))",
+            "{[(mult>0){Increase}(mult<0){Decrease}][(prob==100){s}]}] target's TBA by ",
+            "[((_strEqual(type,`PERCENTAGE))){(_abs(mult))%}(!(_strEqual(type,`PERCENTAGE))){(_dispTimeD(mult))}] for ",
+            "(_dispTimeF(time))[(stackable){ (_left)Stackable(_right)}]"],
         "class": {
             "prob": {
                 "name": "chance",
@@ -153,8 +160,8 @@
                 "name": "Stackable",
                 "tooltip": "If true, the weaken effect will stack, increasing the effect the more stacks there are"
             },
-            "percentage": {
-                "name": "Percentage",
+            "type": {
+                "name": "Type",
                 "tooltip": "Simply adds when false, and increases the TBA by percentage when true"
             }
         }
@@ -463,7 +470,7 @@
             }
         }
     },
-    "IMULETHARGY": {
+    "IMULETH": {
         "abbr_name": "imu. Lethargy",
         "full_name": "Immune/Resistant to Lethargy",
         "tooltip": null,
@@ -997,7 +1004,7 @@
         "abbr_name": "surge",
         "full_name": "Surge",
         "tooltip": null,
-        "format": "[(prob<100){(prob)% chance to make}(prob==100){Makes}] a Lv (time/20) surge attack[(pid){ with (_toString(pid)) IDs}][(hitless){, even if this attack misses}] (_left)Lasts (_dispTime(time)), created within (dis_0) ~ (dis_1) range(_right)",
+        "format": "[(prob<100){(prob)% chance to make}(prob==100){Makes}] a Lv (time/20)[(time!=maxtime){~(maxtime/20)}] surge attack[(pid){ with (_toString(pid)) IDs}][(hitless){, even if this attack misses}] (_left)Lasts (_dispTime(time)), created within (dis_0) ~ (dis_1) range(_right)",
         "class": {
             "prob": {
                 "name": "chance",
@@ -1013,6 +1020,10 @@
             },
             "time": {
                 "name": "duration",
+                "tooltip": null
+            },
+            "maxtime": {
+                "name": "max duration",
                 "tooltip": null
             },
             "hitless": {
@@ -1186,7 +1197,7 @@
         "full_name": "Mini-Wave",
         "tooltip": "Creates small wave which moves twice faster than normal wave with dynamic damage multiplication parameter",
         "format": ["[(prob<100){(prob)% chance to create}(prob==100){Creates}] ",
-            "a lv.(lv) [(inverted){inverted }][(multi>100){mega}(multi<=100){mini}]-wave[(pid){ with (_toString(pid)) IDs}]",
+            "a lv.(lv)[(lv!=maxlv){~(maxlv)}] [(inverted){inverted }][(multi>100){mega}(multi<=100){mini}]-wave[(pid){ with (_toString(pid)) IDs}]",
             "[(hitless){, even if this attack misses}] [(multi!=20){(_left)Gives target (multi)% of activator's damage(_right)}]"],
         "class": {
             "prob": {
@@ -1195,6 +1206,10 @@
             },
             "lv": {
                 "name": "level",
+                "tooltip": null
+            },
+            "maxlv": {
+                "name": "max level",
                 "tooltip": null
             },
             "multi": {
@@ -1400,7 +1415,7 @@
         "full_name": "Death Surge",
         "tooltip": null,
         "format": ["[(spawns>1){Every (spawns)th deployed[(prob<100){ has}] }][(prob<100){(prob)% chance to make}(prob==100){Makes}] ",
-            "a surge attack[(pid){ with (_toString(pid)) IDs}] for (_dispTime(time)) when killed (_left)Created within (dis_0) ~ (dis_1) range(_right)"],
+            "a surge attack[(pid){ with (_toString(pid)) IDs}] for (_dispTime(time))[(time!=maxtime){~(_dispTime(maxtime))}] when killed (_left)Created within (dis_0) ~ (dis_1) range(_right)"],
         "class": {
             "prob": {
                 "name": "chance",
@@ -1416,6 +1431,10 @@
             },
             "time": {
                 "name": "duration",
+                "tooltip": null
+            },
+            "maxtime": {
+                "name": "max duration",
                 "tooltip": null
             },
             "pid": {
@@ -1433,8 +1452,8 @@
         "full_name": "Mini Death Surge",
         "tooltip": null,
         "format": ["[(spawns>1){Every (spawns)th deployed[(prob<100){ has}] }][(prob<100){(prob)% chance to make}(prob==100){Makes}] ",
-            "a mini-surge attack[(pid){ with (_toString(pid)) IDs}] for (_dispTime(time)) when killed (_left)Created within ",
-            "(dis_0) ~ (dis_1) range[(mult!=20){, deals (mult)% of attacker's damage}](_right)"],
+            "a mini-surge attack[(pid){ with (_toString(pid)) IDs}] for (_dispTime(time))[(time!=maxtime){~(_dispTime(maxtime))}] when ",
+            "killed (_left)Created within (dis_0) ~ (dis_1) range[(mult!=20){, deals (mult)% of attacker's damage}](_right)"],
         "class": {
             "prob": {
                 "name": "chance",
@@ -1450,6 +1469,10 @@
             },
             "time": {
                 "name": "duration",
+                "tooltip": null
+            },
+            "maxtime": {
+                "name": "max duration",
                 "tooltip": null
             },
             "mult": {
@@ -1553,31 +1576,52 @@
             }
         }
     },
-    "CDSETTER": {
-        "abbr_name": "CD Modifier",
-        "full_name": "Research Breaker",
-        "tooltip": "Increases a certain unit's cooldown by a given amount",
+    "DELAY": {
+        "abbr_name": "delay",
+        "full_name": "Delay/Advance",
+        "tooltip": null,
         "format": [
-            "(prob)% chance to [(type==2){set}(type!=2){[(amount>0){increase}(amount<0){decrease}]}] ",
-            "[(slot<0){a random unit}(slot>=0&slot<10){the unit in the lineup's (slot+1)[(slot==0){st}(slot==1){nd}(slot==2){rd}(slot>2){th}] slot}(slot==10){attacked unit}(slot==11){all unit}]'s cooldown ",
-            "[(type==2){to}(type!=2){by}] (amount)[(type!=1){f}(type==1){%}]"
+            "(prob)% chance to [((_strEqual(type,`FIXED))){ set respawn to}(!(_strEqual(type,`FIXED))){[(strength>=0){delay}(strength<0){advance}] respawn by}]",
+            " (_abs(strength))[(type==0|type==2){%}(type==1){f}]",
+            "[((_strEqual(type,`MAX))){ of maximum respawn}((_strEqual(type,`CURRENT))){ of current respawn}]"
         ],
         "class": {
             "prob": {
-                "name": "Chance",
+                "name": "chance",
                 "tooltip": null
             },
-            "amount": {
-                "name": "increase",
-                "tooltip": "The amount to add. Use negative numbers to decrease cooldown instead"
-            },
-            "slot": {
-                "name": "slot",
-                "tooltip": "The slot of the unit to affect. Use -1 for random, and 10 to make the slot depend on the hit unit, and 11 to affect every unit"
+            "strength": {
+                "name": "strength",
+                "tooltip": "How much the cooldown gets delayed. Set negative to speed up instead."
             },
             "type": {
                 "name": "type",
-                "tooltip": "0 = unit increase, 1 = percentage increase, 2 = set to value"
+                "tooltip": "0 = Apply x% current cooldown. 1 = Apply a direct amount. 2 = Apply x% max cooldown."
+            }
+        }
+    },
+    "IMUDELAY" : {
+        "abbr_name": "imu. Delay",
+        "full_name": "Immune/Resistant to Delay",
+        "tooltip": null,
+        "format": [
+            "[(mult!=0&block!=100){[(mult==100){Immune}(mult<100&mult>0){Resistant}(mult<0){Weak}] to [((_strEqual(focus,`ALL))){Delay/Advance}((_strEqual(focus,`DEBUFF))){Delay}((_strEqual(focus,`BUFF))){Advance}]",
+            "[(mult<100&mult>0){ (_left)Decreases strength by (mult)%(_right)}(mult<0){ (_left)Increases strength by (_abs(mult))%(_right)}]",
+            "[(block!=0&block<100){ & }]}][(block!=0){[((_strEqual(focus,`ALL))){Delay/Advance}((_strEqual(focus,`DEBUFF))){Delay}((_strEqual(focus,`BUFF))){Advance}] [(block==100){blocker}(block<100&block>0){absorber}(block<0){increaser}]",
+            " (_left)[(block<100&block>0){De}(block<0){In}]creases strength by (_abs(block))%(_right)}]"
+        ],
+        "class": {
+            "mult": {
+                "name": "percent",
+                "tooltip": "Set negative to make this unit weak to the effect"
+            },
+            "block": {
+                "name": "Blocker",
+                "tooltip": "Set from 1 to 99 to reduce duration amongst all units. Set to 100 to completely block delay. Set negative to increase the effect."
+            },
+            "focus": {
+                "name": "Selective",
+                "tooltip": "0 = Resist buffs and debuffs, 1 = Only resistant to attack debuffs, -1 = Only resistant to attack buffs"
             }
         }
     },
@@ -1832,7 +1876,7 @@
         "abbr_name": "M.Surge",
         "full_name": "Mini Surge",
         "tooltip": "Creates small surge that does exactly same behavior of normal surge, but with less damage",
-        "format": "[(prob<100){(prob)% chance to make}(prob==100){Makes}] a Lv(time/20) Mini Surge[(pid){ with (_toString(pid)) IDs}] within (dis_0) ~ (dis_1) range[(hitless){, even if this attack misses}] for (_dispTime(time))[(mult!=20){ (_left)Deals (mult)% of attacker's damage(_right)}]",
+        "format": "[(prob<100){(prob)% chance to make}(prob==100){Makes}] a Lv(time/20)[(time!=maxtime){~(maxtime/20)}] Mini Surge[(pid){ with (_toString(pid)) IDs}] within (dis_0) ~ (dis_1) range[(hitless){, even if this attack misses}] for (_dispTime(time))[(mult!=20){ (_left)Deals (mult)% of attacker's damage(_right)}]",
         "class": {
             "prob": {
                 "name": "chance",
@@ -1848,6 +1892,10 @@
             },
             "time": {
                 "name": "duration",
+                "tooltip": null
+            },
+            "maxtime": {
+                "name": "max duration",
                 "tooltip": null
             },
             "mult": {
@@ -1868,7 +1916,8 @@
         "abbr_name": "C.Surge",
         "full_name": "CounterSurge",
         "tooltip": "Creates a surge when hit by a surge with the hitting surge's level and duration",
-        "format": "[(prob<100){(prob)% chance to make}(prob==100){Makes}] a surge when hit by a surge[(mult!=100){, with (mult)% of the surge's damage}]",
+        "format": ["[(count>1){Every (count)th deployed[(prob<100){ has}] }][(prob<100){(prob)% chance to make}(prob==100){Makes}] ",
+            "a surge when hit by a surge[(max_times>0){ up to (max_times) times}][(mult!=100){, with (mult)% of the surge's damage}]"],
         "class": {
             "prob": {
                 "name": "chance",
@@ -1877,6 +1926,14 @@
             "mult": {
                 "name": "multiplier",
                 "tooltip": null
+            },
+            "count": {
+                "name": "Deploy count",
+                "tooltip": "Amount of deploys needed to trigger"
+            },
+            "max_times": {
+                "name": "Max Times",
+                "tooltip": "Caps the amount of surges to counter. default is 0 (infinite)"
             }
         }
     },
@@ -2053,7 +2110,7 @@
         "abbr_name": "absorb",
         "full_name": "Absorber",
         "tooltip": "Drains HP per enemy damaged",
-        "format": "[(prob<100){(prob)% chance to absorb}(prob==100){Absorbs}] (mult)% of the damage dealt as HP",
+        "format": "[(prob<100){(prob)% chance to absorb}(prob==100){Absorbs}] (mult)% of the damage dealt[(traits){to (_toString(traits)) enemies}] as HP",
         "class": {
             "prob": {
                 "name": "chance",
@@ -2062,6 +2119,10 @@
             "mult": {
                 "name": "multiplier",
                 "tooltip": "What percent of damage dealt will be recovered as HP"
+            },
+            "traits": {
+                "name": "Traits",
+                "tooltip": "Targets all traits by default"
             }
         }
     },
@@ -2105,7 +2166,7 @@
         "abbr_name": "Refund",
         "full_name": "Refund",
         "tooltip": null,
-        "format": "[(count>1){Every (count)th deployed[(prob<100){ has}] }] [(prob<100){(prob)% chance to refund}(prob==100){Refunds}] (mult)% of unit's cost when killed",
+        "format": "[(count>1){Every (count)th deployed[(prob<100){ has}] }][(prob<100){(prob)% chance to refund}(prob==100){Refunds}] (mult)% of unit's cost when killed",
         "class": {
             "prob": {
                 "name": "chance",
@@ -2125,7 +2186,7 @@
         "abbr_name": "C. Charge",
         "full_name": "Cannon Charge",
         "tooltip": null,
-        "format": "[(count>1){Every (count)th deployed[(prob<100){ has}] }] [(prob<100){(prob)% chance to charge}(prob==100){charges}] (mult)% of the cat cannon when killed",
+        "format": "[(count>1){Every (count)th deployed[(prob<100){ has}] }][(prob<100){(prob)% chance to charge}(prob==100){charges}] (mult)% of the cat cannon when killed",
         "class": {
             "prob": {
                 "name": "chance",
@@ -2188,5 +2249,67 @@
                 "tooltip": "Does not play hitback animations (useful if you want a timed entity like Iron Wall Cat or an instant soul spawner)"
             }
         }
+    },
+    "IMUATKANY": {
+        "abbr_name": "ALL Invi.",
+        "full_name": "Full Invincibility",
+        "tooltip": "Like invincibility, but ignores traits and healing",
+        "format": "[(prob<100){(prob)% chance to dodge}(prob==100){Dodges}] attacks for (_dispTimeF(time))[(cd>0){, with a cooldown of (_dispTimeF(cd)) per dodge}]",
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
+            },
+            "time": {
+                "name": "duration",
+                "tooltip": null
+            },
+            "cd": {
+                "name": "cooldown",
+                "tooltip": "Unit will not be able to dodge after the given amount of frames after proc ends"
+            }
+        }
+    },
+    "BERSERK": {
+        "abbr_name": "K.Berserk",
+        "full_name": "Kill Berserker",
+        "tooltip": null,
+        "format": ["[(mult>0){In}(mult<0){De}]creases damage by (_abs(mult))% after killing (killCount) enemies",
+        "[(max_stacks!=1){, [(max_stacks==0){stacks indefinitely}(max_stacks>1){up to (max_stacks)x stacks}]}]"],
+        "class": {
+            "mult": {
+                "name": "Percentage",
+                "tooltip": null
+            },
+            "killCount": {
+                "name": "Kill Count",
+                "tooltip": null
+            },
+            "max_stacks": {
+                "name": "Max Stack",
+                "tooltip": "Use 0 for infinite stacks"
+            }
+        }
+    },
+    "COMBOCOOLDOWN": {
+        "abbr_name": "CD Reduction",
+        "full_name": "Insta-Respawn",
+        "tooltip": null,
+        "format": "[(count>1){Every (count)th deployed[(prob<100){ has}] }][(prob<100){(prob)% chance to have }](mult)% less cooldown",
+        "class": {
+            "prob": {
+                "name": "chance",
+                "tooltip": null
+            },
+            "mult": {
+                "name": "multiplier",
+                "tooltip": "% of CD reduced"
+            },
+            "count": {
+                "name": "Deploy count",
+                "tooltip": "Amount of deploys needed for CD Reduction to trigger"
+            }
+        }
     }
 }
+

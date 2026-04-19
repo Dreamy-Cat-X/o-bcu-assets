@@ -1,6 +1,12 @@
 {
     "history": [
         {
+            "ver":"0.6.2.22",
+            "CORE_VER":"0.7.17.1",
+            "forkver":15,
+            "info":"Add latest data"
+        },
+        {
             "ver":"0.6.2.21",
             "CORE_VER":"0.7.15.0",
             "forkver":13,
