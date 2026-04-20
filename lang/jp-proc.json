@@ -82,7 +82,7 @@
         "abbr_name": "波動",
         "full_name": "波動",
         "tooltip": null,
-        "format": "[(hitless){攻撃が当たらなくても}][(prob<100){(prob)%の確率で}]Lv.(lv)の[(pid){ID(_toString(pid))付き}][(inverted){逆側}]波動を生成する",
+        "format": "[(hitless){攻撃が当たらなくても}][(prob<100){(prob)%の確率で}]Lv.(lv)[(lv!=maxlv){~(maxlv)}]の[(pid){ID(_toString(pid))付き}][(inverted){逆側}]波動を生成する",
         "class": {
             "prob": {
                 "name": "確率",
@@ -90,6 +90,10 @@
             },
             "lv": {
                 "name": "Lv",
+                "tooltip": null
+            },
+            "maxlv": {
+                "name": "最大Lv",
                 "tooltip": null
             },
             "hitless": {
@@ -122,7 +126,7 @@
             },
             "mult": {
                 "name": "倍率",
-                "tooltip": "ここで対象の元々の攻撃力が何%に変動するかを設定可能。-100%(相手を回復させる)や、200%(攻撃力上昇と分けて攻撃力が上がる)等に設定したりも可"
+                "tooltip": "ここで対象の元々の攻撃力が何%に変動するかを設定可能。-100%(相手を回復させる)や、200%(攻撃力上昇とは別で攻撃力が上がる)等に設定したりも可"
             },
             "stackable": {
                 "name": "重複可能か",
@@ -134,7 +138,10 @@
         "abbr_name": "無気力",
         "full_name": "無気力",
         "tooltip": null,
-        "format": "[(prob<100){(prob)%の確率で}](_dispTimeF(time))の間、攻撃間隔を[(percentage){(_abs(mult))%}(!percentage){(_dispTimeD(mult))}][(mult>0){増加}(mult<0){減少}(mult==0){でそのままに}]させる[(stackable){(_left)重複可(_right)}]",
+        "format": ["[(prob<100){(prob)%の確率で}](_dispTimeF(time))の間、攻撃間隔を[((_strEqual(type,`PERCENTAGE))){(_abs(mult))%}(!(_strEqual(type,`PERCENTAGE))){(_dispTimeD(mult))}]",
+            "[((_strEqual(type,`SET))){に変更}(!(_strEqual(type,`SET)))",
+            "{[(mult>0){増加}(mult<0){減少}]させる}]",
+            "[(stackable){(_left)重複可(_right)}]"],
         "class": {
             "prob": {
                 "name": "確率",
@@ -146,13 +153,13 @@
             },
             "mult": {
                 "name": "倍率",
-                "tooltip": "ここで対象の元々の攻撃間隔がいくらに変化するかを設定可能"
+                "tooltip": "ここで対象の元々の攻撃間隔が幾ら変化するかを設定可能"
             },
             "stackable": {
                 "name": "重複可能か",
                 "tooltip": "有効の場合、効果が重複し、回数が重なる毎に効果が大きくなる"
             },
-            "percentage": {
+            "type": {
                 "name": "割合化",
                 "tooltip": "無効の場合は単純に変化させ、有効の場合は%割合で変化させる"
             }
@@ -461,7 +468,7 @@
             }
         }
     },
-    "IMULETHARGY": {
+    "IMULETH": {
         "abbr_name": "無気力無効",
         "full_name": "無気力無効/耐性",
         "tooltip": null,
@@ -493,9 +500,9 @@
         "tooltip": null,
         "format": [
             "[(mult!=0&block!=100){ワープ[(mult==100){無効}(mult<100&mult>0){耐性}(mult<0){に脆弱}]",
-            "[(mult<100&mult>0){(_left)ワープの距離と時間を(mult)%減らす(_right)}(mult<0){ (_left)ワープの距離と時間が(_abs(mult))%増える(_right)}]",
+            "[(mult<100&mult>0){(_left)ワープの時間を(mult)%減らす(_right)}(mult<0){ (_left)ワープの時間が(_abs(mult))%増える(_right)}]",
             "[(block!=0&block<100){＆}]}][(block!=0){ワープ[(block==100){ストッパー}(block<100&block>0){アブゾーバー}(block<0){強化}]",
-            "[(block<100&block>0){(_left)味方に対するワープの距離と時間を(block)%減らす(_right)}(block<0){(_left)味方に対するワープの距離と時間が(_abs(block))%増える(_right)}]}]"
+            "[(block<100&block>0){(_left)味方に対するワープの時間を(block)%減らす(_right)}(block<0){(_left)味方に対するワープの時間が(_abs(block))%増える(_right)}]}]"
         ],
         "class": {
             "mult": {
@@ -964,7 +971,7 @@
                 "tooltip": null
             },
             "time": {
-                "name": "期間",
+                "name": "継続時間",
                 "tooltip": null
             },
             "cd": {
@@ -993,7 +1000,7 @@
         "abbr_name": "烈波",
         "full_name": "烈波",
         "tooltip": null,
-        "format": "[(hitless){攻撃が当たらなくても}][(prob<100){(prob)%の確率で}]Lv.(time/20)の[(pid){ID(_toString(pid))付き}]烈波攻撃を生成する(_left)持続時間は(_dispTime(time))、(dis_0) ~ (dis_1)の範囲で生成される(_right)",
+        "format": "[(hitless){攻撃が当たらなくても}][(prob<100){(prob)%の確率で}]Lv.(time/20)[(time!=maxtime){~(maxtime/20)}]の[(pid){ID(_toString(pid))付き}]烈波攻撃を生成する(_left)持続時間は(_dispTime(time))、(dis_0) ~ (dis_1)の範囲で生成される(_right)",
         "class": {
             "prob": {
                 "name": "確率",
@@ -1011,6 +1018,10 @@
                 "name": "継続時間",
                 "tooltip": null
             },
+            "maxtime": {
+                "name": "最大継続時間",
+                "tooltip": null
+			},
             "hitless": {
                 "name": "不発でも発動",
                 "tooltip": "攻撃が当たらなくても小烈波を生成する"
@@ -1179,7 +1190,7 @@
         "abbr_name": "小波動",
         "full_name": "小波動",
         "tooltip": "通常の波動の2倍の速さで動く小型の波動を生成し、ダメージの倍率パラメータも調整できる",
-        "format": "[(hitless){攻撃が当たらなくても}][(prob<100){(prob)%の確率で}]Lv.(lv)の[(inverted){逆側 }][(multi<=100){小}(multi>100){大}]波動を発生させ[(multi!=20){、 元の攻撃の(multi)%ダメージを与え}]る",
+        "format": "[(hitless){攻撃が当たらなくても}][(prob<100){(prob)%の確率で}]Lv.(lv)[(lv!=maxlv){~(maxlv)}]の[(inverted){逆側 }][(multi<=100){小}(multi>100){大}]波動を発生させ[(multi!=20){、 元の攻撃の(multi)%ダメージを与え}]る",
         "class": {
             "prob": {
                 "name": "確率",
@@ -1187,6 +1198,10 @@
             },
             "lv": {
                 "name": "Lv",
+                "tooltip": null
+            },
+            "maxlv": {
+                "name": "最大Lv",
                 "tooltip": null
             },
             "multi": {
@@ -1311,7 +1326,7 @@
             },
             "regen": {
                 "name": "再生",
-                "tooltip": "HB時に回復するHPの割合"
+                "tooltip": "ノックバック時に回復するHPの割合"
             }
         }
     },
@@ -1339,7 +1354,7 @@
             "((_strEqual(counterWave,`REFLECT))){反射}]する。}][(procType!=0){この反撃は",
             "元々の攻撃の能力[(procType==1){を全て含めて}(procType==2){をこのキャラの能力で置き換えて}(procType==3){とこのキャラの能力を併用して}]反撃する。 }]",
             "反撃は[(areaAttack|!outRange){[(minRange!=0|maxRange!=0){このキャラから(minRange) ~ (maxRange)の範囲に居る}(minRange==0&maxRange==0){このキャラの射程内に居る}]}]",
-			"[(areaAttack){全ての敵}(!areaAttack){[(outRange){距離に関わらず}]攻撃したキャラ}]に対して行う[(areaAttack|outRange){。攻撃したキャラに対しては距離に関係なく反撃する}]"
+			"[(areaAttack){全ての敵}(!areaAttack){[(outRange){距離に関わらず}]攻撃したキャラ}]に対して行う[(areaAttack&outRange){。攻撃したキャラに対しては距離に関係なく反撃する}]"
         ],
         "class": {
             "prob": {
@@ -1391,7 +1406,7 @@
         "full_name": "死亡烈波",
         "tooltip": null,
         "format": ["[(spawns>1){(spawns)回生産される毎に、}]死亡した時、[(prob<100){(prob)%の確率で}]",
-            "(dis_0) ~ (dis_1)の距離に(_dispTime(time))の間[(pid){ID(_toString(pid))付き}]烈波を生成する"],
+            "(dis_0) ~ (dis_1)の距離に(_dispTime(time))[(time!=maxtime){~(_dispTime(maxtime))}]の間[(pid){ID(_toString(pid))付き}]烈波を生成する"],
         "class": {
             "prob": {
                 "name": "確率",
@@ -1407,6 +1422,10 @@
             },
             "time": {
                 "name": "継続時間",
+                "tooltip": null
+            },
+            "maxtime": {
+                "name": "最大継続時間",
                 "tooltip": null
             },
             "pid": {
@@ -1424,7 +1443,7 @@
         "full_name": "死亡小烈波",
         "tooltip": null,
         "format": ["[(spawns>1){(spawns)回生産される毎に、}]死亡した時、[(prob<100){(prob)%の確率で}]",
-            "(dis_0) ~ (dis_1)の距離に(_dispTime(time))の間[(pid){ID(_toString(pid))付き}]小烈波を生成",
+            "(dis_0) ~ (dis_1)の距離に(_dispTime(time))[(time!=maxtime){~(_dispTime(maxtime))}]の間[(pid){ID(_toString(pid))付き}]小烈波を生成",
             "[(mult==20){す}(mult!=20){し、元の攻撃の(mult)%ダメージを与え}]る"],
         "class": {
             "prob": {
@@ -1441,6 +1460,10 @@
             },
             "time": {
                 "name": "継続時間",
+                "tooltip": null
+            },
+            "maxtime": {
+                "name": "最大継続時間",
                 "tooltip": null
             },
             "mult": {
@@ -1531,7 +1554,7 @@
         "abbr_name": "働きネコ",
         "full_name": "働きネコボーナス",
         "tooltip": "働きネコのレベルを一定量上げることができる",
-        "format": "[(prob<100){(prob)%の確率で}]働きネコのレベルを (mult) [(mult>0){増加}(mult<0){減少}]させる",
+        "format": "[(prob<100){(prob)%の確率で}]働きネコのレベルを(mult)[(mult>0){増加}(mult<0){減少}]させる",
         "class": {
             "prob": {
                 "name": "確率",
@@ -1543,30 +1566,52 @@
             }
         }
     },
-    "CDSETTER": {
-        "abbr_name": "再生産",
-        "full_name": "再生産時間",
-        "tooltip": "特定のユニットの再生産時間を変動させることができる",
+    "DELAY": {
+        "abbr_name": "遅延",
+        "full_name": "遅延/短縮",
+        "tooltip": null,
         "format": [
-            "[(prob<100){(prob)%の確率で}][(slot<0){ランダムな味方スロット}(slot>=0&slot<10){味方スロット(slot+1)番目}(slot==10){攻撃された味方スロット}(slot==11){全ての味方スロット}]の再生産時間を",
-            "(amount)[(type!=1){f}(type==1){%}に][(type==2){する}(type!=2){[(amount>0){増加させる}(amount<0){減少させる}]}]"
+            "(prob)%の確率で[((_strEqual(type,`MAX))){最大再生産時間}((_strEqual(type,`CURRENT))){現在再生産時間}]を",
+            "(_abs(strength))[(type==0|type==2){%}(type==1){f}]",
+            "[((_strEqual(type,`FIXED))){に変更}(!(_strEqual(type,`FIXED))){[(strength>=0){遅延}(strength<0){短縮}]させる}]"
         ],
         "class": {
             "prob": {
                 "name": "確率",
                 "tooltip": null
             },
-            "amount": {
-                "name": "変動量",
-                "tooltip": "再生産時間を増加させる場合は正の数値、減少させる場合は負の値を入力する"
-            },
-            "slot": {
-                "name": "スロット",
-                "tooltip": "影響を受けるスロットの番号。-1でランダム、10で攻撃に当たったキャラのスロットに影響する"
+            "strength": {
+                "name": "強度",
+                "tooltip": "遅延される再生産時間の量。負の値に設定すると短縮になる"
             },
             "type": {
                 "name": "種類",
-                "tooltip": "0 = 単位変動, 1 = パーセンテージを変動する, 2 = 入力した値に再生産時間を設定する"
+                "tooltip": "0 = 現在再生産時間に%割合で適応。 1 = 直接の値で適応。 2 = 最大再生産時間に%割合で適応"
+            }
+        }
+    },
+    "IMUDELAY" : {
+        "abbr_name": "遅延無効",
+        "full_name": "遅延無効/耐性",
+        "tooltip": null,
+        "format": [
+            "[((_strEqual(focus,`ALL))){遅延/短縮}((_strEqual(focus,`DEBUFF))){遅延}((_strEqual(focus,`BUFF))){短縮}][(mult!=0&block!=100){[(mult==100){無効}(mult<100&mult>0){耐性}(mult<0){に脆弱}]",
+            "[(mult<100&mult>0){(_left)強度を(mult)%減らす(_right)}(mult<0){ (_left)強度が(_abs(mult))%増える(_right)}]",
+            "[(block!=0&block<100){＆}]}][(block!=0){[((_strEqual(focus,`ALL))){遅延/短縮}((_strEqual(focus,`DEBUFF))){遅延}((_strEqual(focus,`BUFF))){短縮}][(block==100){ストッパー}(block<100&block>0){アブゾーバー}(block<0){強化}]",
+            " (_left)強度が(_abs(block))%[(block<100&block>0){減る}(block<0){増える}](_right)}]"
+        ],
+        "class": {
+            "mult": {
+                "name": "割合",
+                "tooltip": "このキャラを効果に弱くするにはマイナスの値に設定する"
+            },
+            "block": {
+                "name": "ストッパー",
+                "tooltip": "100で遅延を完全にブロックする。1から99に設定すると味方の遅延される再生産時間を減らす。負の値に設定すると再生産時間が増える"
+            },
+            "focus": {
+                "name": "無効化",
+                "tooltip": "0 = バフとデバフに耐性あり。 1 = デバフの攻撃にのみ耐性あり。 -1 = バフの攻撃にのみ耐性あり"
             }
         }
     },
@@ -1821,7 +1866,7 @@
         "abbr_name": "小烈波",
         "full_name": "小烈波",
         "tooltip": "通常烈波と同じ動作をする小さな烈波を発生させ、ダメージの倍率パラメータも調整できる",
-        "format": "[(hitless){攻撃が当たらなくても}][(prob<100){(prob)%の確率で}]Lv.(time/20)の[(pid){ID(_toString(pid))付き}]小烈波攻撃を生成する(_left)持続時間は(_dispTime(time))、(dis_0) ~ (dis_1)の範囲で生成し、元の攻撃の(mult)%ダメージを与える(_right)",
+        "format": "[(hitless){攻撃が当たらなくても}][(prob<100){(prob)%の確率で}]Lv.(time/20)[(time!=maxtime){~(maxtime/20)}]の[(pid){ID(_toString(pid))付き}]小烈波攻撃を生成する(_left)持続時間は(_dispTime(time))、(dis_0) ~ (dis_1)の範囲で生成し、元の攻撃の(mult)%ダメージを与える(_right)",
         "class": {
             "prob": {
                 "name": "確率",
@@ -1837,6 +1882,10 @@
             },
             "time": {
                 "name": "継続時間",
+                "tooltip": null
+            },
+            "maxtime": {
+                "name": "最大継続時間",
                 "tooltip": null
             },
             "mult": {
@@ -1866,6 +1915,14 @@
             "mult": {
                 "name": "倍率",
                 "tooltip": null
+            },
+            "count": {
+                "name": "生産回数",
+                "tooltip": "反撃烈波を発動するために必要な生産回数"
+            },
+            "max_times": {
+                "name": "最大発動数",
+                "tooltip": "反撃烈波を行う回数を制限する。デフォルトは0（無制限）"
             }
         }
     },
@@ -1916,7 +1973,7 @@
     "SPIRIT": {
         "abbr_name": "精霊召喚",
         "full_name": "精霊召喚",
-        "tooltip": "召喚者の後方150射程にネコの精神を召喚し、攻撃無効と衝撃波無効が自動的に付与される",
+        "tooltip": "召喚者の後方150射程にネコの精神を召喚し、完全無敵と衝撃波無効が自動的に付与される",
         "format": [
             "(_entity(id,form))を精霊として召喚者毎に(amount)回まで、[(amount>1&cd0!=cd1){初回}](_dispTime(cd0))後",
             "[(amount>1&cd0!=cd1){、それ以降が(_dispTime(cd1))後}]に召喚可能",
@@ -1989,7 +2046,7 @@
         "abbr_name": "爆波",
         "full_name": "爆波",
         "tooltip": "前後に広がる爆波攻撃を生成する。この爆波は段階的にダメージが下がっていく",
-        "format": ["[(prob<100){(prob)%の確率で}]Lv.(lv)の[(pid){ID(_toString(pid))付き}]爆波攻撃を生成する[(lv>1){、段階的に(reduction)%ごとのダメージ減少}] ",
+        "format": ["[(prob<100){(prob)%の確率で}]Lv.(lv)の[(pid){ID(_toString(pid))付き}]爆波攻撃を生成する[(lv>1){、段階的に(reduction)%ごとのダメージ[(reduction<0){上昇}(reduction>0|reduction==0){減少}]}] ",
             "(_left)[(dis_0==dis_1){(dis_0)の位置に生成}(dis_0!=dis_1){(dis_0) ~ (dis_1)の範囲に生成}](_right)"],
         "class": {
             "prob": {
@@ -2035,7 +2092,7 @@
             },
             "block": {
                 "name": "ストッパー",
-                "tooltip": "1から99の値に設定すると爆波のダメージが減少し、100に設定すると完全に打ち消されます。負の値に設定するとダメージが増加します"
+                "tooltip": "1から99の値に設定すると爆波のダメージが減少し、100に設定すると完全に打ち消されます。負の値に設定するとダメージが増加する"
             },
             "pid": {
                 "name": "ID",
@@ -2056,6 +2113,10 @@
             "mult": {
                 "name": "HP吸収の割合",
                 "tooltip": "元の攻撃の何パーセントまで吸収するか"
+            },
+            "traits": {
+                "name": "属性",
+                "tooltip": "デフォルトで全属性が対象"
             }
         }
     },
@@ -2191,5 +2252,67 @@
                 "tooltip": "ノックバックアニメーションを再生しない(鉄壁砲の壁や死亡烈波の魂生成など時限型のギミックなどに有用)"
             }
         }
+    },
+    "IMUATKANY": {
+        "abbr_name": "全無効",
+        "full_name": "完全無敵",
+        "tooltip": "攻撃無効のような能力だが、属性を無視し回復も無効化する",
+        "format": "[(prob<100){(prob)%の確率で}](_dispTimeF(time))の間攻撃を無効にする[(cd>0){。攻撃を無効化する度に(_dispTimeF(cd))のクールダウンが発生する}]",
+        "class": {
+            "prob": {
+                "name": "確率",
+                "tooltip": null
+            },
+            "time": {
+                "name": "継続時間",
+                "tooltip": null
+            },
+            "cd": {
+                "name": "クールダウン",
+                "tooltip": "無敵時間終了後、指定したフレーム数が経過するまで攻撃無効が発動しなくなる"
+            }
+        }
+    },
+    "BERSERK": {
+        "abbr_name": "攻撃力上昇(撃破)",
+        "full_name": "倒す毎に攻撃力上昇",
+        "tooltip": null,
+        "format": ["敵を(killCount)回倒す毎に攻撃力が(_abs(mult))%[(mult>0){上昇}(mult<0){減少}]",
+        "[(max_stacks!=1){、[(max_stacks==0){能力は無制限に重複する}(max_stacks>1){能力は(max_stacks)回まで重複}]}]"],
+        "class": {
+            "mult": {
+                "name": "割合",
+                "tooltip": null
+            },
+            "killCount": {
+                "name": "撃破数",
+                "tooltip": null
+            },
+            "max_stacks": {
+                "name": "重複最大数",
+                "tooltip": "0を指定すると無制限に重複する"
+            }
+        }
+    },
+    "COMBOCOOLDOWN": {
+        "abbr_name": "再生産減少",
+        "full_name": "即時再生産",
+        "tooltip": null,
+        "format": "[(count>1){(count)回生産される毎に、}][(prob<100){(prob)%の確率で}]再生産時間が(mult)%減少",
+        "class": {
+            "prob": {
+                "name": "確率",
+                "tooltip": null
+            },
+            "mult": {
+                "name": "割合",
+                "tooltip": "減少する再生産時間の%割合"
+            },
+            "count": {
+                "name": "生産回数",
+                "tooltip": "即時再生産を発動するために必要な生産回数"
+            }
+        }
     }
 }
+
