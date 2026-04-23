@@ -635,7 +635,7 @@
         "format": [
             "[(prob<100){(prob)% chance to summon}(prob==100){Summons}] (amount) (_summonMagnification(fix_buff,mult,id)) (_entity(id,form))",
             "[(interval>0){, with a (_dispTime(interval)) between each summoned entity,}] after (_dispTime(time)), ",
-            "each summoned[(tba!=0){ with[(tba==-1){default}(tba>0){(_dispTime(tba)) TBA}],}] (dis)[(max_dis!=dis){ ~ (max_dis)}] range away from ",
+            "each summoned[(tba!=0){ with [(tba==-1){default}(tba>0){(_dispTime(tba))}] TBA,}] (dis)[(max_dis!=dis){ ~ (max_dis)}] range away from ",
             "[(on_kill|on_hit){each target}",
             "(!on_hit&!on_kill){the summoner}] ",
             "[(on_hit){hit}",
