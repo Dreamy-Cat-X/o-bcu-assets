@@ -635,7 +635,7 @@
         "format": [
             "[(prob<100){(prob)% chance to summon}(prob==100){Summons}] (amount) (_summonMagnification(fix_buff,mult,id)) (_entity(id,form))",
             "[(interval>0){, with a (_dispTime(interval)) between each summoned entity,}] after (_dispTime(time)), ",
-            "each summoned (dis)[(max_dis!=dis){ ~ (max_dis)}] range away from ",
+            "each summoned[(tba!=0){ with[(tba==-1){default}(tba>0){(_dispTime(tba)) TBA}],}] (dis)[(max_dis!=dis){ ~ (max_dis)}] range away from ",
             "[(on_kill|on_hit){each target}",
             "(!on_hit&!on_kill){the summoner}] ",
             "[(on_hit){hit}",
@@ -667,6 +667,10 @@
             "max_dis": {
                 "name": "max distance",
                 "tooltip": "Max distance from this entity by default, or from the target if on hit or on kill is enabled"
+            },
+            "tba": {
+                "name": "TBA",
+                "tooltip": "Summons unit with a specified TBA. Set to -1 to use unit's regular TBA, or a nonzero value to set it to the given value"
             },
             "mult": {
                 "name": "buff",
